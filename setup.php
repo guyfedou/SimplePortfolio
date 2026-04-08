@@ -18,12 +18,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db_user = $_POST['db-user'];
     $db_name = $_POST['db-name'];
     $db_pass = $_POST['db-pass'];
+    $db_prefix = "sp_";
 
     if (!$title || !$subtitle || !$username || !$password || !$db_user || !$db_name || !$db_pass ) {
         $message = "Por favor, completa todos los campos.";
     } else {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+	try{
+		$pdo = new PDO("mysql:host=$db_host", $db_user, $user);
+		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$pdo->exec("
+				CREATE TABLE IF NOT EXISTS {$db_prefix}projects (
+					id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+					title VARCHAR(255) NOT NULL,
+					summary VARCHAR(500),
+					content TEXT,
+					images JSON,
+					created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+					updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+				");
+	}catch(PDOException $e) {
+		die("Error: " . $e->getMessage());
+	}
+
+	
 	$config = "<?php
 	
 	define('TITLE', '$title');
@@ -37,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	define('DB_USER', '$db_user');
 	define('DB_PASS', '$db_pass');
 	define('DB_NAME', '$db_name');
+	define('DB_PREFIX', '$db_prefix');
 
 	";
 
