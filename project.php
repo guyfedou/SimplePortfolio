@@ -1,13 +1,10 @@
 <?php include "../templates/header.php"; ?>
 
 <?php
-$projects = json_decode(file_get_contents("../data/projects.json"), true);
-$id = $_GET["id"] ?? null;
-$project = null;
 
-foreach ($projects as $p) {
-    if ($p["id"] == $id) $project = $p;
-}
+$project = $db->get($_GET['id']);
+
+
 
 if (!$project) {
     echo "<p>Proyecto no encontrado.</p>";
