@@ -39,7 +39,6 @@ include "templates/header.php";
     <h2 class="text-3xl font-bold mb-12 text-center"><?= "Mis Proyectos" ?></h2>
 
     <?php
-    $projects = json_decode(file_get_contents("../data/projects.json"), true);
 
     if (!$projects) {
         echo "<p class='text-center text-text-secondary'>No hay proyectos aún.</p>";
