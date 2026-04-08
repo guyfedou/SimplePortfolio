@@ -10,4 +10,4 @@ if (!file_exists($configFile) ) {
 require 'db.php';
 
 $db = new DB();
-$projects = $db->get_all();
+$projects = $db->getAll();
