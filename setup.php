@@ -1,5 +1,5 @@
 <?php
-$configFile = '../data/config.json';
+$configFile = 'data/config.json';
 $message = "";
 
 // Si ya existe la configuración, redirigimos o avisamos
