@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?=htmlspecialchars($config['title'])?></title>
+    <title><?=htmlspecialchars(TITLE)?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/style.css" type="text/css">
 <script>
@@ -28,7 +28,7 @@ colors: {
 </head>
 <body class="bg-bg dark:bg-bg-dark text-text-main dark:text-text-main-dark">
 <header class="w-full py-4 px-8 bg-bg dark:bg-bg-dark text-text-main dark:text-text-main-dark shadow-md flex justify-between items-center sticky top-0 z-50">
-    <a href="/" class="text-2xl font-bold"><?=htmlspecialchars($config['title'])?></a>
+    <a href="/" class="text-2xl font-bold"><?=htmlspecialchars(TITLE)?></a>
     <nav class="space-x-6">
         <a href="#proyectos" class="hover:text-primary transition">Proyectos</a>
         <a href="#sobre-mi" class="hover:text-primary transition">Sobre mí</a>
