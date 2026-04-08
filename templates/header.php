@@ -9,7 +9,7 @@ $config = json_decode(file_get_contents($configFile), true);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?=htmlspecialchars($config['title'])?></title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="./assets/style.css" type="text/css">
+    <link rel="stylesheet" href="../assets/style.css" type="text/css">
 <script>
   tailwind.config = {
     darkMode: 'media',
