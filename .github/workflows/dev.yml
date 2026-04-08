@@ -1,9 +1,8 @@
-name: Deploy PHP to Production
-
+name: Deploy PHP to Staging
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   deploy:
@@ -22,4 +21,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           local-dir: ./
-          server-dir: ${{ secrets.FTP_DEPLOY_DIR }}
+          server-dir: ${{ secrets.FTP_DEV_DEPLOY_DIR }}
