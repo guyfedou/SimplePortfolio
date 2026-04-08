@@ -25,5 +25,5 @@ if (!$project) {
 <?php endif; ?>
 
 <a href="/" class="text-blue-600 dark:text-blue-400 underline">Volver</a>
-<?php include "../templates/footer.php"; ?>
+<?php include "templates/footer.php"; ?>
 
