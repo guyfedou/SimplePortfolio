@@ -1,7 +1,4 @@
-<?php
-$configFile = '../data/config.json';
-$config = json_decode(file_get_contents($configFile), true);
-?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

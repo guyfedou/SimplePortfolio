@@ -1,11 +1,4 @@
-<?php
-$configFile = 'data/config.json';
-if (!file_exists($configFile) || empty(json_decode(file_get_contents($configFile), true))) {
-    header("Location: setup.php");
-    exit;
-}
-
- include "templates/header.php"; ?>
+<?php include "templates/header.php"; ?>
 
 <!-- HERO -->
 <section class="mb-8 text-center text-text">
@@ -78,5 +71,5 @@ if (!file_exists($configFile) || empty(json_decode(file_get_contents($configFile
     </a>
 </section>
 
-<?php include "../templates/footer.php"; ?>
+<?php include "templates/footer.php"; ?>
 
