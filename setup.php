@@ -3,7 +3,7 @@ $configFile = 'data/config.json';
 $message = "";
 
 // Si ya existe la configuración, redirigimos o avisamos
-if (!file_exists($configFile) || !empty(json_decode(file_get_contents($configFile), true))) {
+if (file_exists($configFile) || !empty(json_decode(file_get_contents($configFile), true))) {
     die("<p class='text-center mt-20 text-red-600'>⚠️ Configuración ya existe. Usa el panel admin para modificarla.</p>");
 }
 
