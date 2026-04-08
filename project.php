@@ -1,6 +1,6 @@
-<?php include "../templates/header.php"; ?>
-
-<?php
+<?php 
+include 'init.php';
+include "templates/header.php";
 
 $project = $db->get($_GET['id']);
 
