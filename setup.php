@@ -1,5 +1,5 @@
 <?php
-$configFile = 'data/config.json';
+$configFile = 'config.php';
 $message = "";
 
 // Si ya existe la configuración, redirigimos o avisamos
@@ -14,25 +14,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subtitle = $_POST['subtitle'];
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $db_host = $_POST['db-host'];
+    $db_user = $_POST['db-user'];
+    $db_name = $_POST['db-name'];
+    $db_pass = $_POST['db-pass'];
 
-    if (!$title || !$subtitle || !$username || !$password) {
+    if (!$title || !$subtitle || !$username || !$password || !$db_user || !$db_name || !$db_pass ) {
         $message = "Por favor, completa todos los campos.";
     } else {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $config = [
-            'title' => $title,
-            'name' => $name,
-            'subtitle' => $subtitle,
-            'admin_user' => $username,
-            'admin_pass' => $hashedPassword,
-            'profile_image' => '/assets/img/placeholder.png'
-        ];
 
-        if (!is_dir(__DIR__ . '/data')) {
-            mkdir(__DIR__ . '/data', 0755, true);
-        }
+	$config = "<?php
+	
+	define('TITLE', '$title');
+	define('NAME', '$name');
+	define('SUBTITLE', '$subtitle');
+	define('ADMIN_USER', '$username');
+	define('ADMIN_PASS', '$hashedPassword');
+	define('profile_image', 'assets/img/placeholder.png');
+	
+	define('DB_HOST', '$db_host');
+	define('DB_USER', '$db_user');
+	define('DB_PASS', '$db_pass');
+	define('DB_NAME', '$db_name');
 
-        file_put_contents($configFile, json_encode($config, JSON_PRETTY_PRINT));
+	";
+
+
+        file_put_contents('config.php', $config);
         $message = "✅ Configuración creada correctamente. <a href='admin/login.php' class='text-primary underline'>Ir al login</a>";
     }
 }
@@ -105,7 +114,29 @@ tailwind.config = {
                 <input type="password" name="password" required
                        class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-main dark:text-text-main-dark focus:outline-none focus:ring-2 focus:ring-primary">
             </div>
+            <div>
+                <label class="block font-semibold mb-1"> Host DB</label>
+                <input type="text" name="db-host" required
+                       class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-main dark:text-text-main-dark focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
 
+            <div>
+                <label class="block font-semibold mb-1">Usuario DB</label>
+                <input type="text" name="db-user" required
+                       class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-main dark:text-text-main-dark focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div>
+                <label class="block font-semibold mb-1">Nombre DB</label>
+                <input type="text" name="db-name" required
+                       class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-main dark:text-text-main-dark focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+
+
+            <div>
+                <label class="block font-semibold mb-1">Contraseña DB</label>
+                <input type="password" name="db-pass" required
+                       class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-text-main dark:text-text-main-dark focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
             <button type="submit" class="w-full bg-primary hover:bg-primary-hover text-white py-3 rounded-lg font-semibold transition">
                 Crear Configuración
             </button>
