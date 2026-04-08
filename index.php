@@ -1,4 +1,7 @@
-<?php include "templates/header.php"; ?>
+<?php 
+include "templates/init.php"; 
+include "templates/header.php"; 
+?>
 
 <!-- HERO -->
 <section class="mb-8 text-center text-text">
