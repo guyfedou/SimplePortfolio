@@ -3,7 +3,7 @@ name: Deploy PHP to DirectAdmin
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   deploy:
