@@ -22,4 +22,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           local-dir: ./
-          server-dir: ${{ secrets.FTP_DEPLOY_DIR }}
+          server-dir: ${{ secrets.FTP_DEV_DEPLOY_DIR }}
