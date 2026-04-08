@@ -1,22 +1,21 @@
 <?php
+require '../init.php';
 session_start();
 
 if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == true)
         header("Location: dashboard.php");
 
-$config = json_decode(file_get_contents('../../data/config.json'), true);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user = $_POST['username'];
-    $pass = $_POST['password'];
-    
-    if ($user === $config['admin_user'] && password_verify($pass, $config['admin_pass'])) {
-        $_SESSION['logged_in'] = true;
-        header("Location: dashboard.php");
-        exit;
-    } else {
-        $error = "Usuario o contraseña incorrectos";
-    }
+   $user = $db->login($_POST['username'], $_POST['password']); 
+
+
+   if ($user) {
+	   $_SESSION['user'] = $user;
+	   echo "Login correcto";
+   } else {
+	   echo "Credenciales incorrectas";
+   }
 }
 
 ?>

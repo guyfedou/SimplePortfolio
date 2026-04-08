@@ -40,6 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 				");
+		$pdo->exec("
+				CREATE TABLE IF NOT EXISTS {$db_prefix}users (
+					id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+					username VARCHAR(255) NOT NULL,
+					password VARCHAR(255) NOT NULL
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+				");
+
 	}catch(PDOException $e) {
 		die("Error: " . $e->getMessage());
 	}

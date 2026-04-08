@@ -102,4 +102,22 @@ class DB {
         return $stmt->execute(['id' => $id]);
     }
 
+    public function login($username, $password) {
+
+	    $table = DB_PREFIX . "users";
+
+	    $sql = "SELECT * FROM {$table} WHERE username = :username LIMIT 1";
+	    $stmt = $this->pdo->prepare($sql);
+
+	    $stmt->execute(['username' => $username]);
+
+	    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+	    if ($user && password_verify($password, $user['password'])) {
+		    return $user;
+	    }
+
+	    return false;
+    }
+
 }
