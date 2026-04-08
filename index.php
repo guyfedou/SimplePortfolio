@@ -5,9 +5,9 @@ include "templates/header.php";
 
 <!-- HERO -->
 <section class="mb-8 text-center text-text">
-    <h1 class="text-5xl font-bold mb-4"><?=htmlspecialchars($config['name'])?></h1>
+    <h1 class="text-5xl font-bold mb-4"><?=htmlspecialchars(TITLE)?></h1>
 	<div class="flex-1 flex justify-center mb-4">
-            <img src="<?=htmlspecialchars($config['profile_image'])?>" alt="<?=htmlspecialchars($config['name'])?>" class="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover shadow-lg border-4 border-primary">
+            <img src="<?=htmlspecialchars($config['profile_image'])?>" alt="<?=htmlspecialchars(NAME)?>" class="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover shadow-lg border-4 border-primary">
         </div>
     <p class="text-xl mb-6 text-text-secondary dark:text-text-secondary"><?=htmlspecialchars($config['subtitle'])?></p>
     <a href="#proyectos" class="inline-block bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg transition">
