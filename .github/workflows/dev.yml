@@ -1,5 +1,4 @@
-name: Deploy PHP to DirectAdmin
-
+name: Deploy PHP to Staging
 on:
   push:
     branches:
