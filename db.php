@@ -62,7 +62,7 @@ class DB {
 				$title,
 				$summary,
 				$content,
-				json_encode($images)
+				$images
 		]);
 
 		return $this->pdo->lastInsertId();
