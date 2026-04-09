@@ -5,7 +5,7 @@ $configFile = 'config.php';
 $message = "";
 
 // Si ya existe la configuración, redirigimos o avisamos
-if (file_exists($configFile) || !empty(json_decode(file_get_contents($configFile), true))) {
+if (!file_exists($configFile)) {
     die("<p class='text-center mt-20 text-red-600'>⚠️ Configuración ya existe. Usa el panel admin para modificarla.</p>");
 }
 
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		foreach($initialConfig as $field){
 		$stmt = $pdo->prepare("
 				INSERT INTO {$db_prefix}config (`config_key`, `value`)
-				VALUES (?, ?)
+				VALUES (?, ?) ON DUPLICATE KEY UPDATE value = VALUES(value)
 				");
 
 		$stmt->execute([$field, $_POST[$field]]);
