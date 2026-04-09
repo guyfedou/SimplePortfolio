@@ -47,10 +47,6 @@ class DB {
 
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		if ($row) {
-			$row['images'] = json_decode($row['images'], true);
-		}
-
 		return $row;
 	}
 
