@@ -2,7 +2,7 @@
 include 'init.php';
 include "templates/header.php";
 
-$project = $db->get($_GET['id']);
+$project = $db->getProject($_GET['id']);
 
 
 
