@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subtitle = $_POST['subtitle'];
     $username = $_POST['username'];
     $password = $_POST['password'];
+
     $db_host = $_POST['db-host'];
     $db_user = $_POST['db-user'];
     $db_name = $_POST['db-name'];
@@ -49,10 +50,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				");
 		$pdo->exec("
 				CREATE TABLE IF NOT EXISTS {$db_prefix}config (
-					key VARCHAR(255) NOT NULL UNIQUE,
+					config_key VARCHAR(255) NOT NULL UNIQUE,
 					value VARCHAR(255) NOT NULL
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 				");
+		$initialConfig = ['title','name','subtitle'];
+		foreach($initialConfig as $field){
+		$stmt = $pdo->prepare("
+				INSERT INTO {$db_prefix}config (`config_key`, `value`)
+				VALUES (?, ?)
+				");
+
+		$stmt->execute([$field, $_POST[$field]]);
+
+		}
 
 	}catch(PDOException $e) {
 		die("Error: " . $e->getMessage());

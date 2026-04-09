@@ -140,7 +140,7 @@ class DB {
 
 		$stmt = $this->pdo->prepare("
 				SELECT value FROM {$this->config}
-				WHERE `key` = ?
+				WHERE `config_key` = ?
 				");
 
 		$stmt->execute([$key]);
@@ -153,7 +153,7 @@ class DB {
 	public function setConfig($key, $value) {
 
 		$stmt = $this->pdo->prepare("
-				INSERT INTO {$this->config} (`key`, `value`)
+				INSERT INTO {$this->config} (`config_key`, `value`)
 				VALUES (?, ?)
 				ON DUPLICATE KEY UPDATE value = VALUES(value)
 				");
@@ -165,7 +165,7 @@ class DB {
 
 		$stmt = $this->pdo->prepare("
 				DELETE FROM {$this->config}
-				WHERE `key` = ?
+				WHERE `config_key` = ?
 				");
 
 		return $stmt->execute([$key]);
@@ -174,7 +174,7 @@ class DB {
 	public function getAllConfig() {
 
 		$stmt = $this->pdo->query("
-				SELECT `key`, `value` FROM {$this->config}
+				SELECT `config_key`, `value` FROM {$this->config}
 				");
 
 				$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -182,7 +182,7 @@ class DB {
 				$config = [];
 
 				foreach ($rows as $row) {
-					$config[$row['key']] = $row['value'];
+					$config[$row['config_key']] = $row['value'];
 				}
 
 				return $config;
