@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				VALUES (?, ?)
 				");
 
-		$stmt->execute([trim($_POST['username'], $hashedPassword]);
+		$stmt->execute([trim($_POST['username']), $hashedPassword]);
 
 		$initialConfig = ['title','name','subtitle'];
 		foreach($initialConfig as $field){
