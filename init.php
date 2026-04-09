@@ -10,7 +10,7 @@ if (!file_exists($configFile) ) {
 require 'db.php';
 
 $db = new DB();
-$projects = $db->getAll();
+$projects = $db->getProjects();
 
 var_dump(__DIR__);
 $config = $db->getAllConfig();
