@@ -11,7 +11,4 @@ require 'db.php';
 
 $db = new DB();
 $projects = $db->getProjects();
-
-var_dump(__DIR__);
 $config = $db->getAllConfig();
-var_dump($config);

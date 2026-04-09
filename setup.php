@@ -5,7 +5,7 @@ $configFile = 'config.php';
 $message = "";
 
 // Si ya existe la configuración, redirigimos o avisamos
-if (!file_exists($configFile)) {
+if (file_exists($configFile)) {
     die("<p class='text-center mt-20 text-red-600'>⚠️ Configuración ya existe. Usa el panel admin para modificarla.</p>");
 }
 
