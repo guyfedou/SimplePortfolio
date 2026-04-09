@@ -13,4 +13,5 @@ $db = new DB();
 $projects = $db->getAll();
 
 var_dump(__DIR__);
-var_dump($db->getAllConfig());
+$config = $db->getAllConfig();
+var_dump($config);

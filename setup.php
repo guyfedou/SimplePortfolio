@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$title || !$subtitle || !$username || !$password || !$db_user || !$db_name || !$db_pass ) {
         $message = "Por favor, completa todos los campos.";
     } else {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
 	try{
 		$pdo = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
@@ -54,6 +53,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					value VARCHAR(255) NOT NULL
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 				");
+
+        	$hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
+		$stmt = $pdo->prepare("
+				INSERT INTO {$db_prefix}users (`username`, `password`)
+				VALUES (?, ?)
+				");
+
+		$stmt->execute([trim($_POST['username'], $hashedPassword]);
+
 		$initialConfig = ['title','name','subtitle'];
 		foreach($initialConfig as $field){
 		$stmt = $pdo->prepare("
@@ -64,6 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$stmt->execute([$field, $_POST[$field]]);
 
 		}
+		$pdo->exec("
+				INSERT INTO {$db_prefix}config (`config_key`, `value`)
+				VALUES ('profile_image', 'assets/img/placeholder.png')
+				");
 
 	}catch(PDOException $e) {
 		die("Error: " . $e->getMessage());
@@ -71,13 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	
 	$config = "<?php
-	
-	define('TITLE', '$title');
-	define('NAME', '$name');
-	define('SUBTITLE', '$subtitle');
-	define('ADMIN_USER', '$username');
-	define('ADMIN_PASS', '$hashedPassword');
-	define('profile_image', 'assets/img/placeholder.png');
 	
 	define('DB_HOST', '$db_host');
 	define('DB_USER', '$db_user');
