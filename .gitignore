@@ -1,1 +1,17 @@
 public/assets/img/
+
+# Vim
+*.swp
+*.swo
+*.swx
+*.swn
+.*.swp
+.*.swo
+
+# Backup files
+*~
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db

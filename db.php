@@ -33,9 +33,9 @@ class DB {
 
 		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-		foreach ($data as &$row) {
-			$row['images'] = json_decode($row['images'], true);
-		}
+	//	foreach ($data as &$row) {
+		//	$row['images'] = json_decode($row['images'], true);
+		//}
 
 		return $data;
 	}
