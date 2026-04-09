@@ -47,6 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					password VARCHAR(255) NOT NULL
 					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 				");
+		$pdo->exec("
+				CREATE TABLE IF NOT EXISTS {$db_prefix}config (
+					key VARCHAR(255) NOT NULL UNIQUE,
+					value VARCHAR(255) NOT NULL
+					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+				");
 
 	}catch(PDOException $e) {
 		die("Error: " . $e->getMessage());

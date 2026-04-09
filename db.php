@@ -1,123 +1,191 @@
 <?php
 
-require_once 'config.php';
+require_once __DIR__ . '/config.php';
 
 class DB {
 
-    private $pdo;
-    private $table;
+	private $pdo;
+	private $projects;
+	private $users;
+	private $config;
 
-    public function __construct() {
+	public function __construct() {
 
-        $this->pdo = new PDO(
-            "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
-            DB_USER,
-            DB_PASS,
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        );
+		$this->pdo = new PDO(
+				"mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+				DB_USER,
+				DB_PASS,
+				[
+				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+				]
+				);
 
-        $this->table = DB_PREFIX . "projects";
-    }
+		$this->projects = DB_PREFIX . "projects";
+		$this->users = DB_PREFIX . "users";
+		$this->config = DB_PREFIX . "config";
+	}
 
-    // CREATE
-    public function create($title, $summary, $content, $images = []) {
+	//PROJECTS
 
-        $sql = "INSERT INTO {$this->table} 
-                (title, summary, content, images)
-                VALUES (:title, :summary, :content, :images)";
+	public function getProjects() {
 
-        $stmt = $this->pdo->prepare($sql);
+		$stmt = $this->pdo->query("SELECT * FROM {$this->projects} ORDER BY created_at DESC");
 
-        $stmt->execute([
-            'title' => $title,
-            'summary' => $summary,
-            'content' => $content,
-            'images' => json_encode($images)
-        ]);
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $this->pdo->lastInsertId();
-    }
+		foreach ($data as &$row) {
+			$row['images'] = json_decode($row['images'], true);
+		}
 
-    // READ ALL
-    public function getAll() {
+		return $data;
+	}
 
-        $sql = "SELECT * FROM {$this->table} ORDER BY created_at DESC";
-        $stmt = $this->pdo->query($sql);
+	public function getProject($id) {
 
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$stmt = $this->pdo->prepare("SELECT * FROM {$this->projects} WHERE id = ?");
+		$stmt->execute([$id]);
 
-        foreach ($results as &$row) {
-            $row['images'] = json_decode($row['images'], true);
-        }
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $results;
-    }
+		if ($row) {
+			$row['images'] = json_decode($row['images'], true);
+		}
 
-    // READ ONE
-    public function get($id) {
+		return $row;
+	}
 
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
+	public function createProject($title, $summary, $content, $images = []) {
 
-        $stmt->execute(['id' => $id]);
+		$stmt = $this->pdo->prepare("
+				INSERT INTO {$this->projects}
+				(title, summary, content, images)
+				VALUES (?, ?, ?, ?)
+				");
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+		$stmt->execute([
+				$title,
+				$summary,
+				$content,
+				json_encode($images)
+		]);
 
-        if ($row) {
-            $row['images'] = json_decode($row['images'], true);
-        }
+		return $this->pdo->lastInsertId();
+	}
 
-        return $row;
-    }
+	public function updateProject($id, $title, $summary, $content, $images = []) {
 
-    // UPDATE
-    public function update($id, $title, $summary, $content, $images = []) {
+		$stmt = $this->pdo->prepare("
+				UPDATE {$this->projects}
+				SET title = ?, summary = ?, content = ?, images = ?
+				WHERE id = ?
+				");
 
-        $sql = "UPDATE {$this->table} 
-                SET title = :title,
-                    summary = :summary,
-                    content = :content,
-                    images = :images
-                WHERE id = :id";
+		return $stmt->execute([
+				$title,
+				$summary,
+				$content,
+				json_encode($images),
+				$id
+		]);
+	}
 
-        $stmt = $this->pdo->prepare($sql);
+	public function deleteProject($id) {
 
-        return $stmt->execute([
-            'id' => $id,
-            'title' => $title,
-            'summary' => $summary,
-            'content' => $content,
-            'images' => json_encode($images)
-        ]);
-    }
+		$stmt = $this->pdo->prepare("
+				DELETE FROM {$this->projects}
+				WHERE id = ?
+				");
 
-    // DELETE
-    public function delete($id) {
+		return $stmt->execute([$id]);
+	}
 
-        $sql = "DELETE FROM {$this->table} WHERE id = :id";
-        $stmt = $this->pdo->prepare($sql);
 
-        return $stmt->execute(['id' => $id]);
-    }
+	//USERS
 
-    public function login($username, $password) {
+	public function createUser($username, $password) {
 
-	    $table = DB_PREFIX . "users";
+		$password = password_hash($password, PASSWORD_DEFAULT);
 
-	    $sql = "SELECT * FROM {$table} WHERE username = :username LIMIT 1";
-	    $stmt = $this->pdo->prepare($sql);
+		$stmt = $this->pdo->prepare("
+				INSERT INTO {$this->users}
+				(username, password)
+				VALUES (?, ?)
+				");
 
-	    $stmt->execute(['username' => $username]);
+		return $stmt->execute([$username, $password]);
+	}
 
-	    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+	public function login($username, $password) {
 
-	    if ($user && password_verify($password, $user['password'])) {
-		    return $user;
-	    }
+		$stmt = $this->pdo->prepare("
+				SELECT * FROM {$this->users}
+				WHERE username = ?
+				LIMIT 1
+				");
 
-	    return false;
-    }
+		$stmt->execute([$username]);
+
+		$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		if ($user && password_verify($password, $user['password'])) {
+			return $user;
+		}
+
+		return false;
+	}
+
+	//CONFIG
+
+	public function getConfig($key) {
+
+		$stmt = $this->pdo->prepare("
+				SELECT value FROM {$this->config}
+				WHERE `key` = ?
+				");
+
+		$stmt->execute([$key]);
+
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		return $row ? $row['value'] : null;
+	}
+
+	public function setConfig($key, $value) {
+
+		$stmt = $this->pdo->prepare("
+				INSERT INTO {$this->config} (`key`, `value`)
+				VALUES (?, ?)
+				ON DUPLICATE KEY UPDATE value = VALUES(value)
+				");
+
+		return $stmt->execute([$key, $value]);
+	}
+
+	public function deleteConfig($key) {
+
+		$stmt = $this->pdo->prepare("
+				DELETE FROM {$this->config}
+				WHERE `key` = ?
+				");
+
+		return $stmt->execute([$key]);
+	}
+
+	public function getAllConfig() {
+
+		$stmt = $this->pdo->query("
+				SELECT `key`, `value` FROM {$this->config}
+				");
+
+				$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+				$config = [];
+
+				foreach ($rows as $row) {
+					$config[$row['key']] = $row['value'];
+				}
+
+				return $config;
+	}
 
 }
